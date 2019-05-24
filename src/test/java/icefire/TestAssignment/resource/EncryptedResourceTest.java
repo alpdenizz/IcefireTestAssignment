@@ -9,8 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,6 +58,18 @@ public class EncryptedResourceTest {
 	}
 	
 	@Test
+	public void test_encryptionFailure() throws Exception {
+		int before = service.getAllValues().size();
+		Encrypted e = new Encrypted("  ");
+		mvc.perform(post("/encrypt")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(om.writeValueAsString(e)))
+				.andExpect(status().isBadRequest());
+		int after = service.getAllValues().size();
+		assertThat(after-before).isEqualTo(0);
+	}
+	
+	@Test
 	public void test_decryptionSuccessful() throws Exception {
 		String response = encryptText("Hello World!");
 		Encrypted e = om.readValue(response,Encrypted.class);
@@ -67,6 +77,12 @@ public class EncryptedResourceTest {
 		mvc.perform(get("/decrypt").param("text", encrypted))
 			.andExpect(status().isOk())
 			.andExpect(content().string("Hello World!"));
+	}
+	
+	@Test
+	public void test_decryptionFailure() throws Exception {
+		mvc.perform(get("/decrypt").param("text", "  "))
+			.andExpect(status().isBadRequest());
 	}
 	
 	@Test
