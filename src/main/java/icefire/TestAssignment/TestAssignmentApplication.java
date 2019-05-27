@@ -22,11 +22,11 @@ public class TestAssignmentApplication {
 		SpringApplication.run(TestAssignmentApplication.class, args);
 	}
 	
-	@Bean
+	/*@Bean
 	InitializingBean initDB() {
 		return () -> {
 			repository.save(new Encrypted(Base64.getEncoder().encodeToString("Hello World!".getBytes())));
 		};
-	}
+	}*/
 
 }

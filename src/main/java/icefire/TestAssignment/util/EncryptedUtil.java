@@ -2,12 +2,14 @@ package icefire.TestAssignment.util;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptedUtil {
 	
@@ -15,6 +17,12 @@ public class EncryptedUtil {
 		KeyGenerator gen = KeyGenerator.getInstance("AES");
 		gen.init(128);
 		return gen.generateKey();
+	}
+	
+	public static SecretKey obtainSecretKeyFrom(String text) throws Exception{
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		byte[] digest = md.digest(text.getBytes());
+		return new SecretKeySpec(digest, "AES");
 	}
 	
 	public static Cipher getCipherForEncryption(SecretKey key) throws Exception{

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import icefire.TestAssignment.domain.Encrypted;
+import icefire.TestAssignment.domain.User;
 import icefire.TestAssignment.repository.EncryptedRepository;
 import icefire.TestAssignment.util.EncryptedUtil;
 
@@ -20,10 +21,11 @@ public class EncryptedService {
 	@Autowired
 	private EncryptedRepository repository;
 	
-	public Encrypted encrypt(String text, Cipher cipher) throws Exception{
+	public Encrypted encrypt(String text, Cipher cipher, User current) throws Exception{
 		byte[] ciphered = cipher.doFinal(text.getBytes());
 		String encryptedString = Hex.encodeHexString(ciphered);
 		Encrypted encrypted = new Encrypted(encryptedString);
+		encrypted.setUser(current);
 		return repository.save(encrypted);
 	}
 	
@@ -35,6 +37,10 @@ public class EncryptedService {
 	
 	public List<Encrypted> getAllValues() {
 		return repository.findAll();
+	}
+	
+	public List<Encrypted> valuesOfUser(String un) {
+		return repository.findByUser(new User(un));
 	}
 
 }

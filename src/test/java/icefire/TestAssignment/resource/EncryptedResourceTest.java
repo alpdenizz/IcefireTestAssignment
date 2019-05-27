@@ -1,5 +1,6 @@
 package icefire.TestAssignment.resource;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import icefire.TestAssignment.domain.Encrypted;
 import icefire.TestAssignment.repository.EncryptedRepository;
+import icefire.TestAssignment.repository.UserRepository;
 import icefire.TestAssignment.service.EncryptedService;
+import icefire.TestAssignment.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +36,12 @@ public class EncryptedResourceTest {
 	
 	@Autowired
 	private EncryptedService service;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private EncryptedRepository repository;
@@ -49,12 +59,26 @@ public class EncryptedResourceTest {
 		return result.getResponse().getContentAsString();
 	}
 	
+	@Before
+	public void insertUser() {
+		userService.doesUserExist("user1");
+	}
+	
 	@Test
 	public void test_encryptionSuccessful() throws Exception{
 		int before = service.getAllValues().size();
 		encryptText("Hello World!");
 		int after = service.getAllValues().size();
 		assertThat(after-before).isEqualTo(1);
+	}
+	
+	@Test
+	public void test_encryptionDifferentByUser() throws Exception {
+		String enc1 = encryptText("Hello World!");
+		userService.doesUserExist("user2");
+		String enc2 = encryptText("Hello World!");
+		assertThat(enc1).isNotEqualTo(enc2);
+		userRepository.deleteById("user2");
 	}
 	
 	@Test
@@ -96,5 +120,11 @@ public class EncryptedResourceTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.[*].encrypted",hasSize(2)))
 			.andExpect(jsonPath("$.[*].encrypted",contains(e.getEncrypted(), e.getEncrypted())));
+	
+		userService.doesUserExist("user2");
+		mvc.perform(get("/"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.[*].encrypted",hasSize(0)));
+
 	}
 }
