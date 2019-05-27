@@ -38,15 +38,19 @@ public class EncryptedResource {
 	@PostMapping("/encrypt")
 	public Encrypted saveEncryption(@Valid @RequestBody Encrypted e) throws Exception{
 		String text = e.getEncrypted();
+		//System.out.println("Encrypted text: "+text);
 		Cipher c = EncryptedUtil.getCipherForEncryption(key);
 		return service.encrypt(text, c);
 	}
 	
 	@GetMapping("/decrypt")
-	public ResponseEntity<String> decrypt(@RequestParam("text") String text) throws Exception{
+	public ResponseEntity<?> decrypt(@RequestParam("text") String text) throws Exception{
 		if(text.trim().isEmpty()) return new ResponseEntity<String>("Parameter text must not be blank", HttpStatus.BAD_REQUEST);
 		Cipher c = EncryptedUtil.getCipherForDecryption(key);
-		return new ResponseEntity<String>(service.decrypt(text, c),HttpStatus.OK);
+		Encrypted e = new Encrypted();
+		e.setEncrypted(service.decrypt(text, c));
+		e.setId(0);
+		return new ResponseEntity<Encrypted>(e,HttpStatus.OK);
 	}
 	
 	@GetMapping("/")

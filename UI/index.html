@@ -15,11 +15,19 @@
         div.main {
             margin: 30px;
             }
+        a:hover {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a {
+            color: black;
+        }
     </style>
 </head>
 <body onload="getAllValues()">
     <div class="main">
-    <input type="text" class="input" size="100">
+    <input type="text" class="input" size="100" id="encrypted">
     <button type="button" class="btn btn-primary" onclick="encrypt()">Encrypt</button>
     <button type="button" class="btn btn-primary" onclick="decrypt()">Decrypt</button>
     <p>

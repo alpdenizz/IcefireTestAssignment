@@ -76,7 +76,7 @@ public class EncryptedResourceTest {
 		String encrypted = e.getEncrypted();
 		mvc.perform(get("/decrypt").param("text", encrypted))
 			.andExpect(status().isOk())
-			.andExpect(content().string("Hello World!"));
+			.andExpect(jsonPath("$.encrypted",is("Hello World!")));
 	}
 	
 	@Test
