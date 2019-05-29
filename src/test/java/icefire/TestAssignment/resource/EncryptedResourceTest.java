@@ -22,7 +22,12 @@ import icefire.TestAssignment.domain.Encrypted;
 import icefire.TestAssignment.repository.EncryptedRepository;
 import icefire.TestAssignment.service.EncryptedService;
 
-
+/**
+ * 
+ * @author denizalp@ut.ee
+ * <p>API tests</p>
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,6 +45,18 @@ public class EncryptedResourceTest {
 	@Autowired
 	private ObjectMapper om;
 	
+	/**
+	 * Encryption with calling API
+	 * <ul>
+	 * <li>Status must be 200</li>
+	 * <li>Response json must have a value for key 'encrypted'
+	 * and it is not equal to input text.
+	 * </li>
+	 * </ul>
+	 * @param text going to be encrypted
+	 * @return encryption result
+	 * @throws Exception
+	 */
 	private String encryptText(String text) throws Exception{
 		Encrypted e = new Encrypted(text);
 		MvcResult result = mvc.perform(post("/encrypt")
@@ -50,6 +67,13 @@ public class EncryptedResourceTest {
 		return result.getResponse().getContentAsString();
 	}
 	
+	/**
+	 * Check if encryption succeeds
+	 * <ul>
+	 * <li>DB Table size must be increased by 1</li>
+	 * </ul>
+	 * @throws Exception
+	 */
 	@Test
 	public void test_encryptionSuccessful() throws Exception{
 		int before = service.getAllValues().size();
@@ -58,6 +82,14 @@ public class EncryptedResourceTest {
 		assertThat(after-before).isEqualTo(1);
 	}
 	
+	/**
+	 * Check if encryption fails because the input is blank
+	 * <ul>
+	 * <li>Request must return 400</li>
+	 * <li>DB Table size must not be changed.</li>
+	 * </ul>
+	 * @throws Exception
+	 */
 	@Test
 	public void test_encryptionFailure() throws Exception {
 		int before = service.getAllValues().size();
@@ -70,6 +102,15 @@ public class EncryptedResourceTest {
 		assertThat(after-before).isEqualTo(0);
 	}
 	
+	/**
+	 * Check if decryption succeeds
+	 * <ul>
+	 * <li>Request must return 200</li>
+	 * <li>Response json must have a value for key 'encrypted'
+	 * and it must be equal to initial value that is encrypted for the test.</li>
+	 * </ul>
+	 * @throws Exception
+	 */
 	@Test
 	public void test_decryptionSuccessful() throws Exception {
 		String response = encryptText("Hello World!");
@@ -80,12 +121,28 @@ public class EncryptedResourceTest {
 			.andExpect(jsonPath("$.encrypted",is("Hello World!")));
 	}
 	
+	/**
+	 * Check if decryption fails because the input text is blank
+	 * <ul>
+	 * <li>Request must return 400</li>
+	 * </ul>
+	 * @throws Exception
+	 */
 	@Test
 	public void test_decryptionFailure() throws Exception {
 		mvc.perform(get("/decrypt").param("text", "  "))
 			.andExpect(status().isBadRequest());
 	}
 	
+	/**
+	 * Check if all encrypted values are obtained with the request<br>
+	 * Initially 2 encryptions made for testing
+	 * <ul>
+	 * <li>Request must return 200</li>
+	 * <li>Response json array's size must be equal to 2.</li>
+	 * <li>Response json array must include the encryption results.</li>
+	 * </ul>
+	 */
 	@Test
 	public void test_getAllValuesSuccessful() throws Exception {
 		repository.deleteAll();

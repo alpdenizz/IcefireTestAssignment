@@ -5,6 +5,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 
+ * @author denizalp@ut.ee
+ * <p>Entity class for encrypted text values</p>
+ */
 @Entity
 public class Encrypted {
 
@@ -12,6 +17,9 @@ public class Encrypted {
 	@GeneratedValue
 	private long id;
 	
+	/**
+	 * Encryption result as hex encoded
+	 */
 	@NotBlank
 	private String encrypted;
 	

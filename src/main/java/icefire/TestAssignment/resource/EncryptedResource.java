@@ -18,6 +18,11 @@ import icefire.TestAssignment.domain.Encrypted;
 import icefire.TestAssignment.service.EncryptedService;
 import icefire.TestAssignment.util.EncryptedUtil;
 
+/**
+ * 
+ * @author denizalp@ut.ee
+ * <p>API for the operations in EncryptedService</p>
+ */
 @RestController
 @CrossOrigin
 public class EncryptedResource {
@@ -27,10 +32,21 @@ public class EncryptedResource {
 	
 	private SecretKey key;
 	
+	/**
+	 * Constructor in order to set SecretKey
+	 * @throws Exception
+	 */
 	public EncryptedResource() throws Exception {
 		key = EncryptedUtil.getSecretKey();
 	}
 	
+	/**
+	 * 
+	 * @param e Encrypted object including only text to be encrypted
+	 * @return Encrypted object with the encrypted text, if input's text is not empty<br>
+	 * Otherwise, it will return 400
+	 * @throws Exception
+	 */
 	@PostMapping("/encrypt")
 	public ResponseEntity<?> saveEncryption(@Valid @RequestBody Encrypted e) throws Exception{
 		if(e.getEncrypted().trim().isEmpty()) return new ResponseEntity<String>("Parameter text must not be blank", HttpStatus.BAD_REQUEST);
@@ -40,6 +56,13 @@ public class EncryptedResource {
 		
 	}
 	
+	/**
+	 * 
+	 * @param text going to be decrypted (must not be blank!)
+	 * @return Encrypted object with the decrypted text with id=0<br>
+	 * If input text is blank, then returns 400
+	 * @throws Exception
+	 */
 	@GetMapping("/decrypt")
 	public ResponseEntity<?> decrypt(@RequestParam("text") String text) throws Exception{
 		
@@ -51,6 +74,10 @@ public class EncryptedResource {
 		return new ResponseEntity<Encrypted>(e,HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @return list of Encrypted values in DB
+	 */
 	@GetMapping("/")
 	public ResponseEntity<?> getAllValues() {
 		return new ResponseEntity<List<Encrypted>>(service.getAllValues(),HttpStatus.OK);
