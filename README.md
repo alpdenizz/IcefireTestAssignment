@@ -9,13 +9,26 @@ Icefire Test Assignment as specified in 'specification.pdf'
 * Javascript for UI
 
 ### How to run
-java -jar bidibidi.jar
-After this the application will listen http://localhost:8080/
+
+### For API
+java -jar TestAssignment-0.0.1-SNAPSHOT.jar  
+After this API will listen http://localhost:8080/  
+
+### For UI
+npm install live-server  
+live-server --port=8081  
+After this UI is opened http://127.0.0.1:8081/  
 
 ### How to build
 You can import it your IDE as a Maven project.
 In Eclipse: Import -> Maven -> Existing Maven projects
-You can find more in: https://spring.io/guides/gs/serving-web-content/
+You can find more in: https://spring.io/guides/gs/serving-web-content/  
+
+#### Rules  
+After you running both UI and API  
+1. In UI, put your text into input area, then encrypt it with clicking "Encrypt" button. In the end, encryption will be stored in the table below.  
+2. From the table, you can click an encrypted value. It will load it into the input area. You can decrypt it with clicking "Decrypt" button. This will show the result value in the input area. Or you can click "Encrypt", it will do rule 1.  
+3. Text used for both operations must not be empty.
 
 #### API
 1. Encrypt a text value and save it to DB  
