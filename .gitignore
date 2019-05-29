@@ -1,6 +1,8 @@
 HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+UI/node_modules
+UI/*.json
 
 ### STS ###
 .apt_generated
