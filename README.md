@@ -20,8 +20,8 @@ live-server --port=8081
 After this UI is opened http://127.0.0.1:8081/  
 
 ### How to build
-You can import it your IDE as a Maven project.
-In Eclipse: Import -> Maven -> Existing Maven projects
+You can import it your IDE as a Maven project.  
+In Eclipse: Import -> Maven -> Existing Maven projects  
 You can find more in: https://spring.io/guides/gs/serving-web-content/  
 
 #### Rules  
