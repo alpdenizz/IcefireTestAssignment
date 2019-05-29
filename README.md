@@ -6,7 +6,7 @@ Icefire Test Assignment as specified in 'specification.pdf'
 * Spring boot
 * H2 in memory database
 * Maven as dependency manager
-* Javascript for UI
+* Javascript, HTML and CSS for UI
 
 ### How to run
 
