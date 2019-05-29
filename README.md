@@ -15,8 +15,9 @@ java -jar TestAssignment-0.0.1-SNAPSHOT.jar
 After this API will listen http://localhost:8080/  
 
 ### For UI
+cd UI/  
 npm install live-server  
-live-server --port=8081  
+node main.js  
 After this UI is opened http://127.0.0.1:8081/  
 
 ### How to build
