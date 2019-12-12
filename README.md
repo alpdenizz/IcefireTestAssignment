@@ -1,5 +1,5 @@
 # IcefireTestAssignment
-Icefire Test Assignment as specified in 'specification.pdf'
+A simple web application for Encrpytion / Decryption 
 
 ## Tech Stack
 * Java 8
